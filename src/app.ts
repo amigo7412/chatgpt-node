@@ -34,6 +34,6 @@ openai.createChatCompletion({
 //     await openai.createCompletion
 // })
 
-app.listen(process.env.PORT, () => {
+app.listen(9000, () => {
     return console.log(`Express is listening on PORT ${process.env.PORT}`)
 })
