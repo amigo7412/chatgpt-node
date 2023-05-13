@@ -1,6 +1,6 @@
 import express from "express";
 import { Configuration, OpenAIApi } from "openai";
-// import readline from "readline";
+import readline from "readline";
 import env from "dotenv";
 
 const app = express();
@@ -14,25 +14,24 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: 'user', content: 'Hello' }]
-}).then((res) => {
-    console.log(res.data.choices[0].message?.content)
-}).catch((e) => {
-    console.log(e);
+const userInterface = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
 })
 
-// const userInterface = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout
-// })
+userInterface.prompt();
 
-// userInterface.prompt();
-
-// userInterface.on('line', async (input) => {
-//     await openai.createCompletion
-// })
+userInterface.on('line', async (input: string) => {
+    await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: 'user', content: input }]
+    }).then((res) => {
+        console.log(res.data.choices[0]?.message.content)
+        userInterface.prompt();
+    }).catch((e) => {
+        console.log(e);
+    })
+});
 
 app.listen(9000, () => {
     return console.log(`Express is listening on PORT ${process.env.PORT}`)
